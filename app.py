@@ -8,7 +8,13 @@ import matplotlib.pyplot as plt
 model = joblib.load("model/model.pkl")
 encoder = joblib.load("model/encoder.pkl")
 features = joblib.load("model/features.pkl")
-df = pd.read_csv("model/processed_data.csv")
+
+# ✅ FIX: Load dataset safely
+df = pd.read_csv("data/Training.csv")
+
+# Remove unwanted column if exists
+if 'Unnamed: 133' in df.columns:
+    df = df.drop(columns=['Unnamed: 133'])
 
 st.title("🧠 AI Healthcare Diagnosis System")
 st.write("Select your symptoms and get predicted diseases")
@@ -34,7 +40,7 @@ if "symptom_count" in features:
     idx = features.index("symptom_count")
     input_data[idx] = symptom_count
 
-# Prediction
+# ------------------ PREDICTION ------------------
 if st.button("Predict Disease"):
 
     probs = model.predict_proba([input_data])[0]
@@ -82,7 +88,7 @@ if st.button("Predict Disease"):
     else:
         st.success("✅ Maintain healthy lifestyle")
 
-# ------------------ DATA VISUALIZATION SECTION ------------------
+# ------------------ DATA VISUALIZATION ------------------
 
 st.subheader("📈 Dataset Insights")
 
